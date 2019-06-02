@@ -1,68 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
-
-class Total extends Component {
-
-  render() {
-    return (
-      <div>
-        <p>Общая сумма: {this.props.totalResult} $</p>
-      </div>
-    )
-  }
-}
-
-
-
-class New extends Component {
-
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.props.addFood}>
-          <input type='text' placeholder='Продукция' value={this.props.name} onChange={this.props.newName} />
-          <input type='number' placeholder='Цена' value={this.props.cost} onChange={this.props.newCost} />
-          <input type='number' placeholder='Кол-во' value={this.props.quantity} onChange={this.props.newQuantity} />
-          <input type='submit' />
-        </form>
-      </div>
-    )
-  }
-}
-
-
-
-
-class User extends Component {
-  render() {
-    return (
-      <div>
-        <table>
-          <tr>
-            <td><span><p>Продукция</p></span>{this.props.name}</td>
-            <td><span><p>Цена</p></span>{this.props.cost}$</td>
-            <td><span><p>Кол-во</p></span>{this.props.quantity}шт</td>
-            <td><span><p>Итого</p></span>{this.props.total}$</td>
-            <td><input type='checkbox' checked={this.props.checked} onChange={this.props.handleChangeChecked.bind(this)} /></td>
-            <td><button onClick={this.props.deleteUser.bind(this, this.props.item)}>Удалить</button></td>
-          </tr>
-        </table>
-      </div>
-    )
-  }
-}
+import Total from './components/Total';
+import New from './components/New';
+import User from './components/User';
 
 
 
 class App extends Component {
   state = {
     foods: [
-    {id: 1, name: 'Молоко', cost: 1.10, quantity: 75, checked: true},
-    {id: 2, name: 'Хлеб', cost: 0.75, quantity: 150, checked: true},
-    {id: 3, name: 'Мясо', cost: 4.50, quantity: 50, checked: true},
-    {id: 4, name: 'Рыба', cost: 4.10, quantity: 65, checked: true},
-    ], name: '', cost: '', quantity: '',total: 0,
+    {id: 1, name: 'Молоко', cost: 1.10, quantity: 75},
+    {id: 2, name: 'Хлеб', cost: 0.75, quantity: 150},
+    {id: 3, name: 'Мясо', cost: 4.50, quantity: 50},
+    {id: 4, name: 'Рыба', cost: 4.10, quantity: 65},
+    ], name: '', cost: '', quantity: '', total: 0,
   }
+
 
 
 
@@ -75,17 +28,11 @@ newCost = (event) => {
 newQuantity = (event) => {
   this.setState({quantity: event.target.value})
 }
+//Methods to write data for new position
 
 
 
-handleChangeChecked = (index) => {
-  this.setState(prevState => {
-    const newFood = [...prevState.foods]
-    newFood[index].checked = !prevState.foods[index].checked
-    return ({foods: newFood})
-  })
-  return
-}
+
 
 addFood = (event) => {
   this.state.foods.push({id: this.state.foods.length + 1, name: this.state.name, cost: this.state.cost, quantity: this.state.quantity},)
@@ -93,12 +40,14 @@ addFood = (event) => {
   this.setState({name: '', cost: '', quantity: ''})
   event.preventDefault()
 }
+//add position (button)
 
 deleteUser = (id) => {
   this.setState(prevState => ({
     foods: prevState.foods.filter(item => item !== id)
   }))
 }
+//delete position (button)
 
 
 totalResult = () => {
@@ -108,22 +57,7 @@ totalResult = () => {
   ))
   return result
 }
-
-// totalResult = (index) => {
-//   this.setState(prevState => {
-//     const newCheck = [...prevState.foods]
-//     if (newCheck[index].checked) {
-//       newCheck[index].sum = prevState.foods[index].cost * prevState.foods[index].quantity
-//     } else {
-//       newCheck[index].sum = 1
-//     }
-//     return ({foods: newCheck})
-//   })
-// }
-
-
-
-
+//sum price for all position (result money)
 
 
 foods = () =>
@@ -131,16 +65,14 @@ foods = () =>
   (
     <User 
     key={item.id} 
-    //index={item.id}
     name={item.name} 
     cost={item.cost} 
     quantity={item.quantity} 
     total={item.cost * item.quantity}
-    deleteUser={this.deleteUser.bind(this, item)} 
-    checked={item.checked} 
-    handleChangeChecked={this.handleChangeChecked.bind(this, index)} 
+    deleteUser={this.deleteUser.bind(this, item)}  
     />
   ))
+ //table showing the result of data entry
 
 
 
@@ -154,7 +86,8 @@ foods = () =>
       newName={(event) => this.newName(event)} 
       newCost={(event) => this.newCost(event)} 
       newQuantity={(event) => this.newQuantity(event)} 
-      addFood={this.addFood.bind(this)} />
+      addFood={this.addFood.bind(this)} 
+      />//inputs for create new position
 
   const total = <Total totalResult={this.totalResult()} />
 
